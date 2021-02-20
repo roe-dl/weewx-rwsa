@@ -51,7 +51,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.1"
+VERSION = "0.2"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -129,51 +129,63 @@ class Rwsa(weewx.restx.StdRESTful):
 
 class RwsaThread(weewx.restx.RESTThread):
 
+    #_CONF_MAP = ('0Info=Regionalwetter-SA',
+    #             '1Typ=1',
+    #             '2Url=http://www.regionalwetter-sa.de/doebeln/get_daten.php',
+    #             '3File=.\html\sa_dl_211.txt',
+    #             '4Senddata=?valSA=',
+    #             '5Separator=;',
+    #             '6Unit=0',
+    #             '7Userpw_md5=0',
+    #             '8Success=OK',
+    #             '9Version=2',
+    #             'xBeginData')
+
     #            name         variable, duration, aggregation, format
-    _DATA_MAP = {'01':       ('station','','','{}'),
-                 '02':       ('zip_code','','','{}'),
-                 '03':       ('state_code','','','{}'),
-                 '04':       ('location','','','{}'),
-                 '05':       ('latitude','','','{:.6f}'),
-                 '06':       ('longitude','','','{:.6f}'),
-                 '07':       ('lat_offset','','','{:.0f}'),
-                 '08':       ('lon_offset','','','{:.0f}'),
-                 '09':       ('username','','','{}'),
-                 '10':       ('station_url','','','{}'), # URL Betreiber
-                 '11':       ('station_model','','','{}'),
-                 '12':       ('altitude','','','{:.0f}'),
-                 '13':       ('weewx_version','','','{}'), # Software
-                 '14':       ('dateTime','','','%d.%m.%Y'),
-                 '15':       ('dateTime','','','%H:%M'),
-                 '16':       ('outTemp','','','{:.1f}'),
-                 '17':       ('outTempDayMax','','','{:.1f}'),
-                 '18':       ('outTempDayMin','','','{:.1f}'),
-                 '19':       ('outTemp1h','','','{:.1f}'),
-                 '20':       ('','','','{:.f}'), # temp 5cm
-                 '21':       ('outHumidity','','','{:.0f}'),
-                 '22':       ('barometer','','','{:.1f}'),        # QFF mbar
-                 '23':       ('barometer','3h','diff','{:.1f}'),
-                 '24':       ('dayRain','','','{:.1f}'),
-                 '25':       ('windDir10','','','compass'),
-                 '26':       ('windSpeed10','','','{:.1f}'),      # km/h
-                 '27':       ('windGust','','','{:.1f}'),         # km/h
-                 '28':       ('windGust','Day','max','{:.1f}'),    # km/h
-                 '29':       ('dewpoint','','','{:.1f}'),
-                 '30':       ('windchillDayMin','','','{:.1f}'),
-                 '31':       ('','','','{:.1f}'), # sunshine today
-                 '32':       ('','','','{}'), # URL Webcam
-                 '33':       ('rain','Month','sum','{:.1f}'),
-                 '34':       ('','','','{:.1f}'),
-                 '35':       ('','','','{:.1f}'),
-                 '36':       ('rain','Year','sum','{:.1f}'),
-                 '37':       ('','','','{:.1f}'), # Regen Jahr Abw.
-                 '38':       ('','','','{:.1f}'), # Regen Jahr Abw %
-                 '39':       ('','','','{}'), # Schneehöhe
-                 '40':       ('','','','%d.%m.%Y %H:%M'), # Ablesezeit Schnee
-                 '41':       ('','','','{:.1f}'), # Grünlandtemperatur
-                 '42':       ('','','','%d.%m.%Y'), # GLT 200 Datum
-                 '43':       ('','','','%d.%m.%Y') # GLT 200 Vorjahr
-                }
+    _DATA_MAP = [       ('station','','','{}'),
+                        ('zip_code','','','{}'),
+                        ('state_code','','','{}'),
+                        ('location','','','{}'),
+                        ('latitude','','','{:.6f}'),
+                        ('longitude','','','{:.6f}'),
+                        ('lat_offset','','','{:.0f}'),
+                        ('lon_offset','','','{:.0f}'),
+                        ('username','','','{}'),
+                        ('station_url','','','{}'), # URL Betreiber
+                        ('station_model','','','{}'),
+                        ('altitude','','','{:.0f}'),
+                        ('weewx_version','','','{}'), # Software
+                        ('dateTime','','','%d.%m.%Y'),
+                        ('dateTime','','','%H:%M'),
+                        ('outTemp','','','{:.1f}'),
+                        ('outTempDayMax','','','{:.1f}'),
+                        ('outTempDayMin','','','{:.1f}'),
+                        ('outTemp1h','','','{:.1f}'),
+                        ('','','','{:.f}'), # temp 5cm
+                        ('outHumidity','','','{:.0f}'),
+                        ('barometer','','','{:.1f}'),        # QFF mbar
+                        ('barometer','3h','diff','{:.1f}'),
+                        ('dayRain','','','{:.1f}'),
+                        ('windDir10','','','compass'),
+                        ('windSpeed10','','','{:.1f}'),      # km/h
+                        ('windGust','','','{:.1f}'),         # km/h
+                        ('windGust','Day','max','{:.1f}'),    # km/h
+                        ('dewpoint','','','{:.1f}'),
+                        ('windchillDayMin','','','{:.1f}'),
+                        ('','','','{:.1f}'), # sunshine today
+                        ('','','','{}'), # URL Webcam
+                        ('rain','Month','sum','{:.1f}'),
+                        ('','','','{:.1f}'),
+                        ('','','','{:.1f}'),
+                        ('rain','Year','sum','{:.1f}'),
+                        ('','','','{:.1f}'), # Regen Jahr Abw.
+                        ('','','','{:.1f}'), # Regen Jahr Abw %
+                        ('','','','{}'), # Schneehöhe
+                        ('','','','%d.%m.%Y %H:%M'), # Ablesezeit Schnee
+                        ('GTS','Day','last','{:.1f}'), # Grünlandtemperatur
+                        ('GTSdate','Day','last','%d.%m.%Y'), # GLT 200 Datum
+                        ('','','','%d.%m.%Y') # GLT 200 Vorjahr
+                ]
 
     # Note: The units Regionalwetter Sachsen-Anhalt requests are not fully 
     # covered by one of the standard unit systems. See function 
@@ -241,7 +253,7 @@ class RwsaThread(weewx.restx.RESTThread):
         __x=""
         for __i in self._DATA_MAP:
             try:
-                __x="%s (%s:%s%s%s)" % (__x,__i,self._DATA_MAP[__i][0],self._DATA_MAP[__i][1].capitalize(),self._DATA_MAP[__i][2].capitalize())
+                __x="%s (%s%s%s)" % (__x,__i[0],__i[1].capitalize(),__i[2].capitalize())
             except (TypeError,ValueError,IndexError):
                 __x="%s (%s:*err*)" % (__x,__i)
         loginf("Fields: %s" % __x)
@@ -274,7 +286,7 @@ class RwsaThread(weewx.restx.RESTThread):
 
         __data = { }
         
-        for key in self._DATA_MAP:
+        for key,vvv in enumerate(self._DATA_MAP):
             # archive column name
             rkey = "%s%s%s" % (self._DATA_MAP[key][0],
                                self._DATA_MAP[key][1].capitalize(),
@@ -495,7 +507,7 @@ class RwsaThread(weewx.restx.RESTThread):
             pass
 
         # aggregation values
-        for __key in self._DATA_MAP:
+        for __key,__vvv in enumerate(self._DATA_MAP):
             # field name
             __obs=self._DATA_MAP[__key][0]
             # time span
