@@ -1,0 +1,6 @@
+0.1 22dec2020
+* initial version
+0.2 20feb2021
+* dict replaced by array due to sorting issues
+0.3 17mar2021
+* additional option 'log_url'

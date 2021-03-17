@@ -10,9 +10,21 @@ http://regionalwetter-sa.de/
 Minimal configuration
 
 [StdRESTful]
-    [[Wns]]
+    [[RegionalwetterSachsenAnhalt]]
+        enable = true
+        server_url = replace_me
         station = station ID
-        api_key = WNS-Kennung
+        station_url = replace_me
+        station_model = replace_me
+        username = replace_me
+        api_key = 12345
+        location = replace_me
+        zip_code = replace_me
+        state_code = replace_me
+        lon_offset = 0
+        lat_offset = 0
+        skip_upload = false
+        log_url = false
 
 """
 
@@ -51,7 +63,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.2"
+VERSION = "0.3"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -204,7 +216,8 @@ class RwsaThread(weewx.restx.RESTThread):
                  skip_upload=False, manager_dict=None,
                  post_interval=None, max_backlog=sys.maxsize, stale=None,
                  log_success=True, log_failure=True,
-                 timeout=60, max_tries=3, retry_wait=5):
+                 timeout=60, max_tries=3, retry_wait=5,
+                 log_url=False):
         super(RwsaThread, self).__init__(q,
                                           protocol_name='Rwsa',
                                           manager_dict=manager_dict,
@@ -223,6 +236,7 @@ class RwsaThread(weewx.restx.RESTThread):
         self.server_url = server_url
         loginf("Data will be uploaded to %s" % self.server_url)
         self.skip_upload = to_bool(skip_upload)
+        self.log_url = to_bool(log_url)
         
         self.username = str(username)
         
@@ -367,9 +381,9 @@ class RwsaThread(weewx.restx.RESTThread):
         # build URL
         url = '%s?valSA=%s' % (self.server_url, __body)
         
-        loginf("url %s" % url)
-
-        if weewx.debug >= 2:
+        if self.log_url:
+            loginf("url %s" % url)
+        elif weewx.debug >= 2:
             logdbg("url: %s" % url)
         return url
 
