@@ -1,4 +1,4 @@
-wns - weewx extension that sends data to Wetternetz-Sachsen
+rwsa - weewx extension that sends data to Regionalwetter Sachsen-Anhalt
 Copyright 2020 Johanna Roedenbeck
 Distributed under the terms of the GNU Public License (GPLv3)
 
