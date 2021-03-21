@@ -63,3 +63,11 @@ sudo /etc/init.d/weewx start
 * lon_offset,lat_offset: im Normalfall 0
 * skip_upload: mit "False" kann bewirkt werden, daß der Treiber alles ausführt außer dem eigentlichen Hochladen
 * log_url: legt fest, ob die erzeugte URL mit den Meßdaten ins Syslog-Protokoll geschrieben werden soll (`True`) oder nicht (`False`)
+
+## Verweise (Links):
+
+* [Übersicht zu WeeWX auf Deutsch](https://www.woellsdorf-wetter.de/software/weewx.html)
+* [WeeWX](http://weewx.com) - [WeeWX Wiki](https://github.com/weewx/weewx/wiki)
+* [Belchertown Skin](https://obrienlabs.net/belchertownweather-com-website-theme-for-weewx/) - [Belchertown skin Wiki](https://github.com/poblabs/weewx-belchertown/wiki)
+* [Wöllsdorfer Wetter](https://www.woellsdorf-wetter.de)
+
