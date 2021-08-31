@@ -4,3 +4,8 @@
 * dict replaced by array due to sorting issues
 0.3 17mar2021
 * additional option 'log_url'
+0.4
+* another dict replaced by array due to sorting issues
+* use 'windDir' if 'windDir10' is not present
+* check and set unit group for 'windDir10' if necessary
+* some code optimization

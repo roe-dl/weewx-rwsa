@@ -2,6 +2,8 @@ rwsa - weewx extension that sends data to Regionalwetter Sachsen-Anhalt
 Copyright 2020 Johanna Roedenbeck
 Distributed under the terms of the GNU Public License (GPLv3)
 
+Deutsche Version: https://github.com/roe-dl/weewx-rwsa/blob/master/readme-de.md
+
 You will need an account at Regionalwetter Sachsen-Anhalt
 
   http://www.regionalwetter-sa.de
@@ -54,3 +56,11 @@ state_code: abbreviation of the state location is in
 lon_offset,lat_offset: normally 0
 skip_upload: all is done except upload; for debugging purposes
 log_url: report data, that are or would be uploaded, to syslog
+
+Note:
+
+'windDir10' is replaced by 'windDir' if 'windDir10' is not provided
+by the driver.
+
+'GTS' and 'GTSdate' are available only if 'weewx-GTS' is installed.
+

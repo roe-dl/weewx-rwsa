@@ -63,7 +63,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.3"
+VERSION = "0.4"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -129,6 +129,10 @@ class Rwsa(weewx.restx.StdRESTful):
         except (ValueError,TypeError,IndexError) as e:
             logerr("location longitude latitude altitude %s" % e)
 
+        # 'windDir10' is not defined in units.py
+        weewx.units.obs_group_dict.setdefault('windDir10',
+                   weewx.units.obs_group_dict.get('windDir','group_direction'))
+
         self.archive_queue = queue.Queue()
         self.archive_thread = RwsaThread(self.archive_queue, **site_dict)
 
@@ -153,19 +157,19 @@ class RwsaThread(weewx.restx.RESTThread):
     #             '9Version=2',
     #             'xBeginData')
 
-    #            name         variable, duration, aggregation, format
-    _DATA_MAP = [       ('station','','','{}'),
-                        ('zip_code','','','{}'),
-                        ('state_code','','','{}'),
-                        ('location','','','{}'),
-                        ('latitude','','','{:.6f}'),
-                        ('longitude','','','{:.6f}'),
-                        ('lat_offset','','','{:.0f}'),
-                        ('lon_offset','','','{:.0f}'),
-                        ('username','','','{}'),
-                        ('station_url','','','{}'), # URL Betreiber
-                        ('station_model','','','{}'),
-                        ('altitude','','','{:.0f}'),
+    #                   variable, duration, aggregation, format
+    _DATA_MAP = [       ('station','','attr','{}'),
+                        ('zip_code','','attr','{}'),
+                        ('state_code','','attr','{}'),
+                        ('location','','attr','{}'),
+                        ('latitude','','attr','{:.6f}'),
+                        ('longitude','','attr','{:.6f}'),
+                        ('lat_offset','','attr','{:.0f}'),
+                        ('lon_offset','','attr','{:.0f}'),
+                        ('username','','attr','{}'),
+                        ('station_url','','attr','{}'), # URL Betreiber
+                        ('station_model','','attr','{}'),
+                        ('altitude','','attr','{:.0f}'),
                         ('weewx_version','','','{}'), # Software
                         ('dateTime','','','%d.%m.%Y'),
                         ('dateTime','','','%H:%M'),
@@ -238,6 +242,8 @@ class RwsaThread(weewx.restx.RESTThread):
         self.skip_upload = to_bool(skip_upload)
         self.log_url = to_bool(log_url)
         
+        self.has_windDir10 = True
+        
         self.username = str(username)
         
         # location description
@@ -298,43 +304,24 @@ class RwsaThread(weewx.restx.RESTThread):
             except (TypeError,ValueError) as e:
                 logerr("barometer calc 1h diff: %s" % e)
 
-        __data = { }
+        __data = []
         
         for key,vvv in enumerate(self._DATA_MAP):
             # archive column name
-            rkey = "%s%s%s" % (self._DATA_MAP[key][0],
-                               self._DATA_MAP[key][1].capitalize(),
-                               self._DATA_MAP[key][2].capitalize())
+            rkey = "%s%s%s" % (vvv[0],
+                               vvv[1].capitalize(),
+                               vvv[2].capitalize())
             # format string
-            fstr = self._DATA_MAP[key][3]
+            fstr = vvv[3]
             
-            if rkey == 'station':
-                __data[key]=str(self.station)
-            elif rkey == 'station_model':
-                __data[key]=str(self.station_model)
-            elif rkey == 'station_url':
-                __data[key]=str(self.station_url)
-            elif rkey == 'location':
-                __data[key]=str(self.location)
-            elif rkey == 'longitude':
-                __data[key]=fstr.format(self.longitude)
-            elif rkey == 'latitude':
-                __data[key]=fstr.format(self.latitude)
-            elif rkey == 'lon_offset':
-                __data[key]=fstr.format(self.lon_offset)
-            elif rkey == 'lat_offset':
-                __data[key]=fstr.format(self.lat_offset)
-            elif rkey == 'zip_code':
-                __data[key]=str(self.zip_code)
-            elif rkey == 'state_code':
-                __data[key]=str(self.state_code)
-            elif rkey == 'username':
-                __data[key]=str(self.username)
-            elif rkey == 'altitude':
-                __data[key]=fstr.format(self.altitude)
-            elif rkey == 'weewx_version':
-                __data[key]="WEEWX_%s" % (weewx.__version__)
+            if vvv[2]=='attr':
+                # station data
+                __data.append(fstr.format(getattr(self,vvv[0],'n.v.')))
+            elif vvv[0] == 'weewx_version':
+                # WeeWX version
+                __data.append("WEEWX_%s" % (weewx.__version__))
             elif (rkey in record_m and record_m[rkey] is not None):
+                # weather data
                 try:
                     # Note: The units Regionalwetter Sachsen-Anhalt requests 
                     # are not fully covered by one of the standard unit systems.
@@ -351,19 +338,19 @@ class RwsaThread(weewx.restx.RESTThread):
                     # format value to string
                     if __vt[2]=='group_time':
                         # date or time values
-                        __data[key] = time.strftime(fstr,
-                                               time.localtime(record_m[rkey]))
+                        __data.append(time.strftime(fstr,
+                                           time.localtime(record_m[rkey])))
                     elif fstr == 'compass':
                         # compass direction
-                        __data[key] = self.formatter.to_ordinal_compass(__vt)
+                        __data.append(self.formatter.to_ordinal_compass(__vt))
                     else:
                         # numeric values and strings
-                        __data[key] = fstr.format(__vt[0])
+                        __data.append(fstr.format(__vt[0]))
                 except (TypeError, ValueError, NameError, IndexError) as e:
                     logerr("%s:%s: %s" % (key,rkey,e))
-                    __data[key] = 'n.v.'
+                    __data.append('n.v.')
             else:
-                __data[key] = 'n.v.'
+                __data.append('n.v.')
         return __data
 
     def format_url(self, record):
@@ -373,7 +360,7 @@ class RwsaThread(weewx.restx.RESTThread):
         __data = RwsaThread.__wns_umwandeln(self,record)
         
         # values concatenated by ';'
-        __body = ";".join(__data[__lkey] for __lkey in __data)
+        __body = ";".join(__data)
         
         # replace special characters by % codes for URL
         __body = urllib.parse.quote(__body,safe='/;%:')
@@ -559,6 +546,13 @@ class RwsaThread(weewx.restx.RESTThread):
                 except Exception as e:
                     logerr("%s.%s.%s %s" % (__obs,__tim,__agg,e))
                 
+        # if 'windDir10' is not included in the record use 'windDir' instead
+        if 'windDir10' not in _datadict and 'windDir' in _datadict:
+            _datadict['windDir10'] = _datadict['windDir']
+            if self.has_windDir10:
+                logerr("'windDir10' is not present. Using 'windDir' instead.")
+                self.has_windDir10 = False
+
         return _datadict
         
     def check_response(self,response):

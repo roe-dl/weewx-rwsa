@@ -64,6 +64,16 @@ sudo /etc/init.d/weewx start
 * skip_upload: mit "False" kann bewirkt werden, daß der Treiber alles ausführt außer dem eigentlichen Hochladen
 * log_url: legt fest, ob die erzeugte URL mit den Meßdaten ins Syslog-Protokoll geschrieben werden soll (`True`) oder nicht (`False`)
 
+## Wetterdaten
+
+* Die mittlere Windrichtung der letzten zehn Minuten (`windDir10`) 
+  wird durch die aktuelle Windrichtung (`windDir`) ersetzt, 
+  wenn der Treiber ersteres nicht liefert.
+* Grünlandtemperatursumme (`GTS`) und das Datum des Erreichens des
+  Wertes 200 (`GTSdate`) sind nur verfügbar, wenn die Erweiterung
+  [weewx-GTS](https://github.com/roe-dl/weewx-GTS) 
+  installiert ist.
+
 ## Verweise (Links):
 
 * [Übersicht zu WeeWX auf Deutsch](https://www.woellsdorf-wetter.de/software/weewx.html)
