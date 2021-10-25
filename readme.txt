@@ -35,6 +35,7 @@ sudo wee_extension --install weewx-rwsa.zip
         lat_offset = 0
         skip_upload = false
         log_url = false
+        T5CM = None
 
 Strings including spaces need quoting.
 
@@ -56,6 +57,7 @@ state_code: abbreviation of the state location is in
 lon_offset,lat_offset: normally 0
 skip_upload: all is done except upload; for debugging purposes
 log_url: report data, that are or would be uploaded, to syslog
+T5CM: observation type to use for 5cm temperature
 
 Note:
 

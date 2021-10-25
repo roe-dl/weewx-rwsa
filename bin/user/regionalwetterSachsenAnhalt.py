@@ -1,4 +1,4 @@
-# Copyright 2020 Johanna Roedenbeck
+# Copyright 2020,2021 Johanna Roedenbeck
 # derived from Windy driver by Matthew Wall
 # thanks to Gary and Tom Keffer from Weewx development group
 
@@ -25,6 +25,7 @@ Minimal configuration
         lat_offset = 0
         skip_upload = false
         log_url = false
+        T5CM = None
 
 """
 
@@ -63,7 +64,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.4"
+VERSION = "0.5"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -177,7 +178,7 @@ class RwsaThread(weewx.restx.RESTThread):
                         ('outTempDayMax','','','{:.1f}'),
                         ('outTempDayMin','','','{:.1f}'),
                         ('outTemp1h','','','{:.1f}'),
-                        ('','','','{:.f}'), # temp 5cm
+                        ('','','','{:.f}'), # temp 5cm min
                         ('outHumidity','','','{:.0f}'),
                         ('barometer','','','{:.1f}'),        # QFF mbar
                         ('barometer','3h','diff','{:.1f}'),
@@ -221,7 +222,7 @@ class RwsaThread(weewx.restx.RESTThread):
                  post_interval=None, max_backlog=sys.maxsize, stale=None,
                  log_success=True, log_failure=True,
                  timeout=60, max_tries=3, retry_wait=5,
-                 log_url=False):
+                 log_url=False,T5CM=None):
         super(RwsaThread, self).__init__(q,
                                           protocol_name='Rwsa',
                                           manager_dict=manager_dict,
@@ -268,6 +269,13 @@ class RwsaThread(weewx.restx.RESTThread):
         except (ValueError,TypeError,IndexError):
             self.altitude=None
         loginf("Altitude %s ==> %.0f m" % (altitude,self.altitude))
+        
+        # 5cm temperature
+        try:
+            if T5CM and T5CM.lower()!='none':
+                self._DATA_MAP[19] = (T5CM,'Day','min','{:.2f}')
+        except Exception:
+            pass
                 
         # report field names to syslog
         __x=""

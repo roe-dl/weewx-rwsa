@@ -40,6 +40,7 @@ sudo wee_extension --install weewx-rwsa.zip
         lat_offset = 0
         skip_upload = false
         log_url = false
+        T5CM = None
 ```
 
 Eintragungen, die Leerzeichen oder Sonderzeichen enthalten, müssen in Anführungszeichen oder Hochkommata eingeschlossen werden. 
@@ -63,6 +64,8 @@ sudo /etc/init.d/weewx start
 * lon_offset,lat_offset: im Normalfall 0
 * skip_upload: mit "False" kann bewirkt werden, daß der Treiber alles ausführt außer dem eigentlichen Hochladen
 * log_url: legt fest, ob die erzeugte URL mit den Meßdaten ins Syslog-Protokoll geschrieben werden soll (`True`) oder nicht (`False`)
+* T5CM: Größe, die als 5cm-Temperatur verwendet werden soll, z.B.
+  `extraTemp1`
 
 ## Wetterdaten
 
