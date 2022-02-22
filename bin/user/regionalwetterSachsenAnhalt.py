@@ -64,7 +64,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.5"
+VERSION = "0.6"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -222,7 +222,7 @@ class RwsaThread(weewx.restx.RESTThread):
                  post_interval=None, max_backlog=sys.maxsize, stale=None,
                  log_success=True, log_failure=True,
                  timeout=60, max_tries=3, retry_wait=5,
-                 log_url=False,T5CM=None):
+                 log_url=False,T5CM=None,daySunD=None):
         super(RwsaThread, self).__init__(q,
                                           protocol_name='Rwsa',
                                           manager_dict=manager_dict,
@@ -273,10 +273,17 @@ class RwsaThread(weewx.restx.RESTThread):
         # 5cm temperature
         try:
             if T5CM and T5CM.lower()!='none':
-                self._DATA_MAP[19] = (T5CM,'Day','min','{:.2f}')
+                self._DATA_MAP[19] = (T5CM,'Day','min','{:.1f}')
         except Exception:
             pass
-                
+        
+        # sunshine duration
+        try:
+            if daySunD and daySunD.lower()!='none':
+                self._DATA_MAP[30] = (daySunD,'Day','sum','sunshine')
+        except Exception:
+            pass
+        
         # report field names to syslog
         __x=""
         for __i in self._DATA_MAP:
@@ -337,17 +344,22 @@ class RwsaThread(weewx.restx.RESTThread):
                     # get value with individual unit
                     __vt = weewx.units.as_value_tuple(record_m,rkey)
                     # if unit group (__vt[2]) is defined in _UNIT_MAP
-                    # convert to new unit
+                    # convert to the unit defined there
+                    # check if we need to convert the unit
                     if __vt[2] in self._UNIT_MAP:
                         logdbg("%s convert unit from %.3f %s %s" % (rkey,__vt[0],__vt[1],__vt[2]))
                         __vt=weewx.units.convert(__vt,self._UNIT_MAP[__vt[2]])
                         logdbg("%s converted unit to %.3f %s %s" % (rkey,__vt[0],__vt[1],__vt[2]))
-
                     # format value to string
                     if __vt[2]=='group_time':
                         # date or time values
                         __data.append(time.strftime(fstr,
                                            time.localtime(record_m[rkey])))
+                    elif fstr == 'sunshine':
+                        if __vt[1]!='minute':
+                            __vt = weewx.units.convert(__vt,'minute')
+                        hour,min = divmod(__vt[0],60)
+                        __data.append('%.0f:%02.0f' % (hour,min))
                     elif fstr == 'compass':
                         # compass direction
                         __data.append(self.formatter.to_ordinal_compass(__vt))

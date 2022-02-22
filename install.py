@@ -11,7 +11,7 @@ def loader():
 class RegionalwetterSachsenAnhaltInstaller(ExtensionInstaller):
     def __init__(self):
         super(RegionalwetterSachsenAnhaltInstaller, self).__init__(
-            version="0.5",
+            version="0.6",
             name='Regionalwetter-Sachsen-Anhalt',
             description='Upload weather data to Regionalwetter Sachsen-Anhalt.',
             author="Johanna Roedenbeck",
@@ -33,6 +33,7 @@ class RegionalwetterSachsenAnhaltInstaller(ExtensionInstaller):
                         'lat_offset':'0',
                         'skip_upload':'false',
                         'log_url':'false',
-                        'T5CM':'None'}}},
+                        'T5CM':'None',
+                        'daySunD':'None'}}},
             files=[('bin/user', ['bin/user/regionalwetterSachsenAnhalt.py'])]
             )

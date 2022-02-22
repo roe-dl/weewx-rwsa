@@ -41,6 +41,7 @@ sudo wee_extension --install weewx-rwsa.zip
         skip_upload = false
         log_url = false
         T5CM = None
+        daySunD = None
 ```
 
 Eintragungen, die Leerzeichen oder Sonderzeichen enthalten, müssen in Anführungszeichen oder Hochkommata eingeschlossen werden. 

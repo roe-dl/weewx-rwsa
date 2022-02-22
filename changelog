@@ -11,3 +11,5 @@
 * some code optimization
 0.5 25oct2021
 * option T5CM to set the observation type for 5cm temperature
+0.6 22feb2022
+* option daySunD to set the observation type for sunshine hours
