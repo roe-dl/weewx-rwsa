@@ -13,3 +13,6 @@
 * option T5CM to set the observation type for 5cm temperature
 0.6 22feb2022
 * option daySunD to set the observation type for sunshine hours
+0.6.1 28sep2022
+* remove unused api_key option
+* correct percent encoding

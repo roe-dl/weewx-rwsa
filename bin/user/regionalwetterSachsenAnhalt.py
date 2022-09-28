@@ -17,7 +17,6 @@ Minimal configuration
         station_url = replace_me
         station_model = replace_me
         username = replace_me
-        api_key = 12345
         location = replace_me
         zip_code = replace_me
         state_code = replace_me
@@ -64,7 +63,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.6"
+VERSION = "0.6.1"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -110,7 +109,7 @@ class Rwsa(weewx.restx.StdRESTful):
     def __init__(self, engine, cfg_dict):
         super(Rwsa, self).__init__(engine, cfg_dict)
         loginf("version is %s" % VERSION)
-        site_dict = weewx.restx.get_site_dict(cfg_dict, 'RegionalwetterSachsenAnhalt', 'api_key')
+        site_dict = weewx.restx.get_site_dict(cfg_dict, 'RegionalwetterSachsenAnhalt', 'station', 'username', 'state_code', 'zip_code')
         if site_dict is None:
             return
 
@@ -211,8 +210,8 @@ class RwsaThread(weewx.restx.RESTThread):
                  'group_rainrate':'mm_per_hour',
                  'group_speed':'km_per_hour'
                 }
-                 
-    def __init__(self, q, api_key, state_code, zip_code, username,
+                
+    def __init__(self, q, state_code, zip_code, username,
                  location='',station_model='',station_url='',
                  longitude=0,latitude=0,altitude='',
                  lon_offset=0,lat_offset=0,
@@ -235,7 +234,6 @@ class RwsaThread(weewx.restx.RESTThread):
                                           timeout=timeout,
                                           retry_wait=retry_wait)
         self.formatter=weewx.units.Formatter()
-        self.api_key = api_key
         self.station = station
         loginf("Station %s" % self.station)
         self.server_url = server_url
@@ -383,7 +381,7 @@ class RwsaThread(weewx.restx.RESTThread):
         __body = ";".join(__data)
         
         # replace special characters by % codes for URL
-        __body = urllib.parse.quote(__body,safe='/;%:')
+        __body = urllib.parse.quote(__body,safe='/;%:',encoding='iso8859-1')
 
         # build URL
         url = '%s?valSA=%s' % (self.server_url, __body)

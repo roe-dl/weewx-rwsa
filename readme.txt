@@ -27,7 +27,6 @@ sudo wee_extension --install weewx-rwsa.zip
         station = replace_me
         station_model = replace_me
         username = replace_me
-        api_key = 0
         location = replace_me
         zip_code = replace_me
         state_code = replace_me
@@ -38,8 +37,6 @@ sudo wee_extension --install weewx-rwsa.zip
         T5CM = None
 
 Strings including spaces need quoting.
-
-German umlauts are encoded using % like within URLs.
 
 4) restart weewx
 

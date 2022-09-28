@@ -32,7 +32,6 @@ sudo wee_extension --install weewx-rwsa.zip
         station = Stationskennung
         station_model = Wetterstations-Hardware
         username = Benutzername
-        api_key = 0
         location = Ortsname
         zip_code = Postleitzahl
         state_code = Abkürzung des Bundeslandes
@@ -45,7 +44,6 @@ sudo wee_extension --install weewx-rwsa.zip
 ```
 
 Eintragungen, die Leerzeichen oder Sonderzeichen enthalten, müssen in Anführungszeichen oder Hochkommata eingeschlossen werden. 
-Umlaute müssen mit Prozentzeichen übersetzt werden, wie es in Browsereingabezeilen gemacht wird.
 
 4) WeeWX neu starten
 
