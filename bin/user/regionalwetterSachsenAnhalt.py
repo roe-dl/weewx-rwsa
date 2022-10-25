@@ -63,7 +63,7 @@ from weeutil.weeutil import to_bool, to_int, to_float
 import weewx.xtypes
 from weeutil.weeutil import TimeSpan
 
-VERSION = "0.6.1"
+VERSION = "0.7"
 
 REQUIRED_WEEWX = "3.8.0"
 if StrictVersion(weewx.__version__) < StrictVersion(REQUIRED_WEEWX):
@@ -466,7 +466,7 @@ class RwsaThread(weewx.restx.RESTThread):
         # get midnight-to-midnight time span according to Tom Keffer
         daytimespan = weeutil.weeutil.archiveDaySpan(_time_ts)
         # yesterday
-        yesterdaytimespan = weeutil.weeutil.archiveDaySpan(_time_ts,1,1)
+        yesterdaytimespan = weeutil.weeutil.archiveDaySpan(_time_ts, days_ago=1)
         # get actual month
         monthtimespan = weeutil.weeutil.archiveMonthSpan(_time_ts)
         # get actual year

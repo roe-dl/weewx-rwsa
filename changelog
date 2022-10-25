@@ -16,3 +16,5 @@
 0.6.1 28sep2022
 * remove unused api_key option
 * correct percent encoding
+0.7 25oct2022
+* adapted to removed grace parameter in archiveDaySpan for WeeWX 4.9.x
