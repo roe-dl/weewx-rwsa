@@ -16,7 +16,17 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 
 2) run the installer
 
-sudo wee_extension --install weewx-rwsa.zip
+   WeeWX up to version 4.X
+
+   ```
+   sudo wee_extension --install weewx-rwsa.zip
+   ```
+
+   WeeWX from version 5.0 on
+
+   ```
+   sudo weectl extension install weewx-rwsa.zip
+   ```
 
 3) enter parameters in the weewx configuration file
 
@@ -40,8 +50,19 @@ Strings including spaces need quoting.
 
 4) restart weewx
 
-sudo /etc/init.d/weewx stop
-sudo /etc/init.d/weewx start
+   for SysVinit systems:
+
+   ```
+   sudo /etc/init.d/weewx stop
+   sudo /etc/init.d/weewx start
+   ```
+
+   for systemd systems:
+
+   ```
+   sudo systemctl stop weewx
+   sudo systemctl start weewx
+   ```
 
 Configuration options:
 

@@ -18,9 +18,17 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 
 2) Aufruf des Installationsprogrammes
 
-```
-sudo wee_extension --install weewx-rwsa.zip
-```
+   WeeWX bis Version 4.X
+
+   ```
+   sudo wee_extension --install weewx-rwsa.zip
+   ```
+
+   WeeWX ab Version 5.0
+
+   ```
+   sudo weectl extension install weewx-rwsa.zip
+   ```
 
 3) Eingabe der Zugangsdaten in die Konfigurationsdatei
 
@@ -47,10 +55,19 @@ Eintragungen, die Leerzeichen oder Sonderzeichen enthalten, müssen in Anführun
 
 4) WeeWX neu starten
 
-```
-sudo /etc/init.d/weewx stop
-sudo /etc/init.d/weewx start
-```
+   Bei Linux-Systemen mit SysVinit:
+
+   ```
+   sudo /etc/init.d/weewx stop
+   sudo /etc/init.d/weewx start
+   ```
+
+   Bei Linux-Systemen mit systemd:
+
+   ```
+   sudo systemctl stop weewx
+   sudo systemctl start weewx
+   ```
 
 ## Konfigurationsoptionen
 
