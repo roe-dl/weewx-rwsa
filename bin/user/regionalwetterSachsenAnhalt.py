@@ -133,14 +133,17 @@ class Rwsa(weewx.restx.StdRESTful):
         weewx.units.obs_group_dict.setdefault('windDir10',
                    weewx.units.obs_group_dict.get('windDir','group_direction'))
 
-        self.archive_queue = queue.Queue()
+        self.archive_queue = queue.Queue(5)
         self.archive_thread = RwsaThread(self.archive_queue, **site_dict)
 
         self.archive_thread.start()
         self.bind(weewx.NEW_ARCHIVE_RECORD, self.new_archive_record)
 
     def new_archive_record(self, event):
-        self.archive_queue.put(event.record)
+        try:
+            self.archive_queue.put(event.record,timeout=10)
+        except queue.Full:
+            logerr('Queue is full. Thread died?')
 
 
 class RwsaThread(weewx.restx.RESTThread):

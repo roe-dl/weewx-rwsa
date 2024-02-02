@@ -20,3 +20,4 @@
 * adapted to removed grace parameter in archiveDaySpan for WeeWX 4.9.x
 0.8
 * updated docu for WeeWX 5.0
+* limit queue size
