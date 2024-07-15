@@ -22,12 +22,19 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
    sudo wee_extension --install weewx-rwsa.zip
    ```
 
-   WeeWX from version 5.0 on
+   WeeWX from version 5.0 on and WeeWX packet installation
 
    ```
    sudo weectl extension install weewx-rwsa.zip
    ```
 
+   WeeWX from version 5.0 on and WeeWX pip installation into an virtual environment
+
+   ```
+   source ~/weewx-venv/bin/activate
+   weectl extension install weewx-svg2png.zip
+   ```
+   
 3) enter parameters in the weewx configuration file
 
 [StdRESTful]

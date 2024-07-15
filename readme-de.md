@@ -12,7 +12,7 @@ Zur Nutzung ist ein Account beim Anbieter "Regionalwetter Sachsen-Anhalt" erford
 
 1) Download
 
-```
+```shell
 wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 ```
 
@@ -20,16 +20,24 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 
    WeeWX bis Version 4.X
 
-   ```
+   ```shell
    sudo wee_extension --install weewx-rwsa.zip
    ```
 
-   WeeWX ab Version 5.0
+   WeeWX ab Version 5.0 nach WeeWX-Paketinstallation
 
-   ```
+   ```shell
    sudo weectl extension install weewx-rwsa.zip
    ```
 
+   WeeWX ab Version 5.0 on nach WeeWX-Installation per pip in eine virtuelle
+   Umgebung
+
+   ```shell
+   source ~/weewx-venv/bin/activate
+   weectl extension install weewx-svg2png.zip
+   ```
+   
 3) Eingabe der Zugangsdaten in die Konfigurationsdatei
 
 ```
