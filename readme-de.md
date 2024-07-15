@@ -35,7 +35,7 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 
    ```shell
    source ~/weewx-venv/bin/activate
-   weectl extension install weewx-svg2png.zip
+   weectl extension install weewx-rwsa.zip
    ```
    
 3) Eingabe der Zugangsdaten in die Konfigurationsdatei

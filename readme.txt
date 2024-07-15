@@ -32,7 +32,7 @@ wget -O weewx-rwsa.zip https://github.com/roe-dl/weewx-rwsa/archive/master.zip
 
    ```
    source ~/weewx-venv/bin/activate
-   weectl extension install weewx-svg2png.zip
+   weectl extension install weewx-rwsa.zip
    ```
    
 3) enter parameters in the weewx configuration file
