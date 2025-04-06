@@ -21,7 +21,7 @@ class RegionalwetterSachsenAnhaltInstaller(ExtensionInstaller):
                 'StdRESTful': {
                     'RegionalwetterSachsenAnhalt': {
                         'enable': 'true',
-                        'server_url':"'http://www.regionalwetter-sa.de/daten/get_daten.php'",
+                        'server_url':"http://www.regionalwetter-sa.de/daten/get_daten.php",
                         'station': 'replace_me',
                         'station_model':'replace_me',
                         'username':'replace_me',
